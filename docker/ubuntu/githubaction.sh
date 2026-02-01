@@ -8,7 +8,7 @@ sudo service nginx start
 # único al registrar el runner de github
 # formato: timestamp + random number
 UNIQUE_ID="$(date +%s)-$RANDOM"
-TOKEN="B2733TOEH7Y6A4GQJWJH5ATJP6CJK"
+TOKEN="B2733TNM46T6HXPXLQRM3JLJP6NM4"
 GITHUB_REPOSITORY="https://github.com/gadiro2005-sys/IESRomeroVargas_despliegue_apps"
 RUNNER_PATH="/home/runner"
 CONTAINER_NAME="server-$UNIQUE_ID"
