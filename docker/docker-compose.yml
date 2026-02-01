@@ -1,0 +1,27 @@
+services:
+  ubuntu:
+    # Fuerza la arquitectura amd64 (útil si se ejecuta en Apple Silicon o entornos mixtos)
+    platform: linux/amd64
+    # Construcción de la imagen Docker
+    build:
+      # Contexto de construcción (directorio actual)
+      context: .
+      # Dockerfile que se usará para construir la imagen
+      dockerfile: ubuntu/Dockerfile
+    # Nombre fijo del contenedor (en lugar de uno generado automáticamente)
+    container_name: ubuntu22_server
+    # Mantiene el contenedor activo y permite interacción por terminal
+    tty: true
+    stdin_open: true
+    # Mapeo de puertos
+    # Puerto 8006 del host → puerto 80 del contenedor (por ejemplo, para Nginx o Apache)
+    ports:
+      - "8006:80"
+    # Conexión del contenedor a una red personalizada
+    networks:
+      - networkubuntu
+# Definición de redes personalizadas
+networks:
+  networkubuntu:
+    # Red bridge por defecto (aisla el contenedor del resto)
+    driver: bridge
