@@ -22,7 +22,7 @@ jobs:
       - name: Fetch runners
         id: set-matrix   # ID del step para poder usar sus outputs
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }} # ⚠️ Token de GitHub
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} # ⚠️ Token de GitHub
           OWNER: your-org-or-user
           REPO: your-repo
         run: |
