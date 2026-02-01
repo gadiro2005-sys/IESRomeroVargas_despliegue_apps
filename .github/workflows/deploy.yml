@@ -1,0 +1,83 @@
+# Nombre del workflow (aparece en la pestaña Actions)
+name: Despliegue de commit
+
+# Evento que dispara el workflow
+on:
+  push:
+    branches:
+      - dev
+      - main   # Se ejecuta cuando hay push a la rama main (podría ser master o develop)
+
+jobs:
+  # Primer job: obtiene los runners disponibles
+  get-runners:
+    runs-on: ubuntu-latest   # Este job corre en un runner de GitHub (no self-hosted)
+
+    # Define outputs para que otros jobs los usen
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+
+    steps:
+      # Paso que consulta la API de GitHub para obtener los runners
+      - name: Fetch runners
+        id: set-matrix   # ID del step para poder usar sus outputs
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }} # ⚠️ Token de GitHub
+          OWNER: your-org-or-user
+          REPO: your-repo
+        run: |
+          # Mensaje informativo (debug)
+          echo "Deploying to runner $GH_TOKEN"
+
+          # Llamada a la API de GitHub para listar los runners del repositorio
+          runners=$(curl -s \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            https://api.github.com/repos/${{ github.repository }}/actions/runners)
+
+          # Construimos una matriz solo con los runners:
+          # - self-hosted
+          # - que estén online
+          # - usando su nombre
+          matrix=$(echo "$runners" | jq -c '
+            {
+              runner: [
+                .runners[]
+                | select(.status == "online")
+                | .name
+              ]
+            }
+          ')
+
+          # Exportamos la matriz como output del job
+          echo "matrix=$matrix" >> $GITHUB_OUTPUT
+
+  # Segundo job: despliega el código
+  deploy:
+    needs: get-runners   # Este job depende del anterior
+    name: Deploy on specific runner
+
+    # Estrategia matrix: se ejecuta una vez por cada runner encontrado
+    strategy:
+      matrix: ${{ fromJson(needs.get-runners.outputs.matrix) }}
+
+    # El job se ejecuta en cada runner self-hosted
+    runs-on: ${{ matrix.runner }}
+
+    steps:
+      # Paso 1: checkout del repositorio
+      - name: Checkout del código
+        uses: actions/checkout@v4
+
+      # Paso 2: copiar los archivos al directorio real de despliegue
+      # Usamos rsync para sincronizar y borrar lo que ya no exista
+      - name: Mover archivos a carpeta de despliegue
+        run: |
+          echo "Deploying to runner ${{ matrix.runner }}..."
+          pwd
+
+          # Sincroniza ./app con /var/www/html
+          # --delete elimina archivos sobrantes en destino
+          # --exclude '.git' evita copiar el repositorio Git
+          sudo rsync -av --delete --exclude '.git' ./app/* /var/www/html
