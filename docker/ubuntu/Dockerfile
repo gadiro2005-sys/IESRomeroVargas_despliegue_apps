@@ -37,10 +37,18 @@ WORKDIR /home/runner
 
 # Descarga del GitHub Actions Runner oficial
 # Se descarga la versión concreta 2.331.0 para Linux x64
-RUN curl -o actions-runner.tar.gz -L \
-     https://github.com/actions/runner/releases/download/v2.331.0/actions-runner-linux-x64-2.331.0.tar.gz && \
-    tar xzf actions-runner.tar.gz && \
-    rm actions-runner.tar.gz
+ARG TARGETARCH
+RUN if [ "$TARGETARCH" = "arm64" ]; then \
+      RUN curl -o actions-runner.tar.gz -L \
+          https://github.com/actions/runner/releases/download/v2.331.0/actions-runner-linux-arm64-2.331.0.tar.gz && \
+          tar xzf actions-runner.tar.gz && \
+          rm actions-runner.tar.gz \
+    else \
+      RUN curl -o actions-runner.tar.gz -L \
+          https://github.com/actions/runner/releases/download/v2.331.0/actions-runner-linux-x64-2.331.0.tar.gz && \
+          tar xzf actions-runner.tar.gz && \
+          rm actions-runner.tar.gz \
+    fi \
 
 # Instalación de dependencias adicionales requeridas por el runner
 RUN ./bin/installdependencies.sh
