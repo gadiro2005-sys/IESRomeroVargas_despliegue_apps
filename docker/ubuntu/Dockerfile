@@ -2,10 +2,6 @@
 # Proporciona un sistema estable y compatible con la mayoría de herramientas
 FROM ubuntu:22.04
 
-# Comando por defecto del contenedor
-# Abre una shell bash si no se especifica otro comando
-CMD ["bash"]
-
 # Evita preguntas interactivas durante la instalación de paquetes
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -39,16 +35,15 @@ WORKDIR /home/runner
 # Se descarga la versión concreta 2.331.0 para Linux x64
 ARG TARGETARCH
 RUN if [ "$TARGETARCH" = "arm64" ]; then \
-      RUN curl -o actions-runner.tar.gz -L \
-          https://github.com/actions/runner/releases/download/v2.331.0/actions-runner-linux-arm64-2.331.0.tar.gz && \
-          tar xzf actions-runner.tar.gz && \
-          rm actions-runner.tar.gz \
+      curl -L -o actions-runner.tar.gz \
+        https://github.com/actions/runner/releases/download/v2.331.0/actions-runner-linux-arm64-2.331.0.tar.gz ; \
     else \
-      RUN curl -o actions-runner.tar.gz -L \
-          https://github.com/actions/runner/releases/download/v2.331.0/actions-runner-linux-x64-2.331.0.tar.gz && \
-          tar xzf actions-runner.tar.gz && \
-          rm actions-runner.tar.gz \
-    fi \
+      curl -L -o actions-runner.tar.gz \
+        https://github.com/actions/runner/releases/download/v2.331.0/actions-runner-linux-x64-2.331.0.tar.gz ; \
+    fi && \
+    tar xzf actions-runner.tar.gz && \
+    rm actions-runner.tar.gz && \
+    chown -R runner:runner /home/runner
 
 # Instalación de dependencias adicionales requeridas por el runner
 RUN ./bin/installdependencies.sh
