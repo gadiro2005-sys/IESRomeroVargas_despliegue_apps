@@ -23,7 +23,7 @@ Esta práctica tiene como objetivo:
 Clonar repositorio
 
 ```
-git clone git@github.com:gadiro2005-sys/IESRomeroVargas_despliegue_apps.git
+git clone https://github.com/gadiro2005-sys/IESRomeroVargas_despliegue_apps.git
 cd IESRomeroVargas_despliegue_apps
 ```
 
