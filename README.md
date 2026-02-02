@@ -12,7 +12,7 @@ Esta práctica tiene como objetivo:
 ---
 
 ## 🛠️ Tecnologías utilizadas
-- Composer
+- Docker
 - HTML, CSS
 ---
 
