@@ -75,4 +75,4 @@ USER runner
 # Punto de entrada del contenedor
 # Ejecuta el script que registra y lanza el GitHub Runner
 # (Está comentado para poder entrar manualmente al contenedor si se desea)
-ENTRYPOINT ["./githubaction.sh"]
+#ENTRYPOINT ["./githubaction.sh"]
