@@ -46,7 +46,7 @@ UNIQUE_ID="$(date +%s)-$RANDOM"
 GITHUB_REPOSITORY="https://github.com/gadiro2005-sys/IESRomeroVargas_despliegue_apps"
 RUNNER_PATH="/home/runner"
 CONTAINER_NAME="$NOMBRE-$UNIQUE_ID"
-LABELS="linux,server-$UNIQUE_ID"
+LABELS="linux,server-$UNIQUE_ID,$CONTAINER_NAME"
 echo "▶ Registering runner: $CONTAINER_NAME"
 #Registramos el runner
 ./config.sh \
