@@ -31,13 +31,14 @@ Arrancamos el contendor docker para la práctica
 
 ```
 cd docker
-docker compose -f docker-compose.yml -p docker up -d
+docker compose up -d
 o de otra forma
 docker-compose up -d
 ```
 ```
-docker ps
+docker ps -a
 docker exec -it ubuntu22_server /bin/bash
+./githubaction.sh
 ```
 
 Abrir el navegador con la siguiente dirección url:
