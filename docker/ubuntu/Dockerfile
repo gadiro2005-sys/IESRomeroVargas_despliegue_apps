@@ -20,6 +20,7 @@ RUN apt-get update && apt-get install -y \
     bash \
     rsync \
     nginx \
+    jq \
     && rm -rf /var/lib/apt/lists/*
 
 # Creación del usuario "runner"
