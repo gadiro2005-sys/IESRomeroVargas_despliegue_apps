@@ -4,6 +4,11 @@ set -e
 echo "Starting Nginx..."
 sudo service nginx start
 
+#Pedimos el nombre de usuario
+DEFAULT_NAME="Invitado"
+read -p "Introduce tu nombre y primer apellido con este formato Nombre-apellido: " NOMBRE
+NOMBRE=${NOMBRE:-$DEFAULT_NAME}
+
 #Obtenemos el token para registrar el runner
 ############################
 # Obtener token dinámico
@@ -40,7 +45,7 @@ echo "✅ Token obtenido correctamente"
 UNIQUE_ID="$(date +%s)-$RANDOM"
 GITHUB_REPOSITORY="https://github.com/gadiro2005-sys/IESRomeroVargas_despliegue_apps"
 RUNNER_PATH="/home/runner"
-CONTAINER_NAME="server-$UNIQUE_ID"
+CONTAINER_NAME="$NOMBRE-$UNIQUE_ID"
 LABELS="linux,server-$UNIQUE_ID"
 echo "▶ Registering runner: $CONTAINER_NAME"
 #Registramos el runner
